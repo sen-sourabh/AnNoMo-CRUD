@@ -45,26 +45,22 @@ router.post("/", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
-  if (!ObjectId.isValid(req.params.id)) {
-    return res.status(400).send(`No record with given id: ${req.params.id} `);
+router.put("/", (req, res) => {
+  if (!ObjectId.isValid(req.body.id)) {
+    return res.status(400).send(`No record with given id: ${req.body.id} `);
   }
   var task = {
+    id: req.body.id,
     name: req.body.name,
     description: req.body.description,
   };
-  Task.findByIdAndUpdate(
-    req.params.id,
-    { $set: task },
-    { new: true },
-    (err, doc) => {
-      if (!err) {
-        res.send(doc);
-      } else {
-        console.log("Error in Update Tasks:", err);
-      }
+  Task.findByIdAndUpdate(task.id, { $set: task }, { new: true }, (err, doc) => {
+    if (!err) {
+      res.send(doc);
+    } else {
+      console.log("Error in Update Tasks:", err);
     }
-  );
+  });
 });
 
 router.delete("/:id", (req, res) => {
